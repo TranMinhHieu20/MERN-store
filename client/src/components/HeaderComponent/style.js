@@ -5,6 +5,8 @@ export const WrapperHeader = styled(Row)`
   padding: 15px 120px;
   background-color: rgb(26, 148, 255);
   align-items: center;
+  gap: 16px
+  flex-wrap: nowrap;
 `;
 
 export const WrapperTextHeader = styled.span`
@@ -27,4 +29,5 @@ export const WrapperHeaderAccount = styled.div`
 export const WrapperTextHeaderSmall = styled.span`
   color: #fff;
   font-size: 12px;
+  white-space: nowrap;
 `;
