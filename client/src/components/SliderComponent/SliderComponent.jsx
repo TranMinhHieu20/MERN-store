@@ -14,7 +14,7 @@ const SliderComponent = ({ arrImages }) => {
     arrows: false,
   };
   return (
-    <Slider {...settings} style={{ marginTop: "0" }}>
+    <Slider {...settings} style={{ marginTop: "0", backgroundColor: "#fff" }}>
       {arrImages.map((image, index) => (
         <div key={index}>
           <img

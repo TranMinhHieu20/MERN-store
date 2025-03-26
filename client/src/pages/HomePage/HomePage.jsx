@@ -7,6 +7,7 @@ import laptop from "../../assets/image/laptop.png";
 import iphone from "../../assets/image/iphone.jpg";
 import tv1 from "../../assets/image/tv1.jpg";
 import macbook from "../../assets/image/macbook.jpeg";
+import CardComponent from "../../components/CardComponent/CardComponent";
 
 const HomePage = () => {
   const arrs = [
@@ -34,9 +35,24 @@ const HomePage = () => {
       </div>
       <div
         id="container"
-        style={{ backgroundColor: "#fff", padding: "0 120px" }}
+        style={{
+          backgroundColor: "#efefef",
+          padding: "0 120px",
+          height: "1000px",
+        }}
       >
         <SliderComponent arrImages={[tv, tv1, iphone, laptop, macbook]} />
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            alignItems: "center",
+            gap: "20px",
+          }}
+        >
+          <CardComponent />
+          <CardComponent />
+        </div>
       </div>
     </>
   );
