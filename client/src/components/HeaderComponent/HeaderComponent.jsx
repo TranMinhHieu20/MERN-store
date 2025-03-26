@@ -11,7 +11,7 @@ import {
   CaretDownOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import Search from "antd/es/input/Search";
+import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 
 const HeaderComponent = () => {
   return (
@@ -21,10 +21,10 @@ const HeaderComponent = () => {
           <WrapperTextHeader>LOGO</WrapperTextHeader>
         </Col>
         <Col span={12} style={{ gap: 12 }}>
-          <Search
-            // addonBefore="https://"
+          <ButtonInputSearch
+            size="large"
             placeholder="input search text"
-            allowClear
+            textButton="Tìm kiếm"
           />
         </Col>
         <Col span={6} style={{ display: "flex", gap: 10 }}>
