@@ -47,7 +47,7 @@ const NavBarComponent = () => {
     }
   };
   return (
-    <>
+    <div style={{ backgroundColor: "" }}>
       <div>
         <WrapperLabelText>Danh mục</WrapperLabelText>
         <WrapperContent>
@@ -73,7 +73,7 @@ const NavBarComponent = () => {
           {renderContent("price", ["dưới 50.000đ", "trên 150.000đ"])}
         </WrapperContent>
       </div>
-    </>
+    </div>
   );
 };
 

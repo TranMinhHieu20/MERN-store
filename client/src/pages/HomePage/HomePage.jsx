@@ -1,6 +1,6 @@
 import React from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import { WrapperTypeProduct } from "./style";
+import { WrapperButtonMore, WrapperTypeProduct } from "./style";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import tv from "../../assets/image/tv.jpg";
 import laptop from "../../assets/image/laptop.png";
@@ -9,6 +9,7 @@ import tv1 from "../../assets/image/tv1.jpg";
 import macbook from "../../assets/image/macbook.jpeg";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 const HomePage = () => {
   const arrs = [
@@ -48,13 +49,38 @@ const HomePage = () => {
             marginTop: "20px",
             display: "flex",
             alignItems: "center",
+            flexWrap: "wrap",
             gap: "20px",
           }}
         >
           <CardComponent />
           <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
         </div>
-        <NavBarComponent />
+        <WrapperButtonMore
+          textButton="Xem thêm"
+          type="outline"
+          styleButton={{
+            width: "240px",
+            height: "38px",
+            borderRadius: "5px",
+            border: "1px solid rgb(11, 116, 229)",
+            color: "rgb(11, 116, 229",
+            display: "flex",
+            margin: "20px auto 0",
+          }}
+        />
+        {/* <NavBarComponent /> */}
       </div>
     </>
   );

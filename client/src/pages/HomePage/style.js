@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 export const WrapperTypeProduct = styled.div`
   display: flex;
@@ -11,4 +12,11 @@ export const WrapperTypeProduct = styled.div`
   white-space: nowrap;
   overflow: hidden;
   background-color: #fff;
+`;
+
+export const WrapperButtonMore = styled(ButtonComponent)`
+  &:hover {
+    background-color: rgb(11, 116, 229);
+    color: #fff !important;
+  }
 `;
