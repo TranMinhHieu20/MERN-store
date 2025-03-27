@@ -8,6 +8,7 @@ import iphone from "../../assets/image/iphone.jpg";
 import tv1 from "../../assets/image/tv1.jpg";
 import macbook from "../../assets/image/macbook.jpeg";
 import CardComponent from "../../components/CardComponent/CardComponent";
+import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 
 const HomePage = () => {
   const arrs = [
@@ -53,6 +54,7 @@ const HomePage = () => {
           <CardComponent />
           <CardComponent />
         </div>
+        <NavBarComponent />
       </div>
     </>
   );

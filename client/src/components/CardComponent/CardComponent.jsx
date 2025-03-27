@@ -1,5 +1,4 @@
 import React from "react";
-import { Card } from "antd";
 import { CheckOutlined, StarFilled } from "@ant-design/icons";
 import {
   StyleNameProduct,
