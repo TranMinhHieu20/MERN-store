@@ -38,7 +38,7 @@ const HomePage = () => {
         style={{
           backgroundColor: "#efefef",
           padding: "0 120px",
-          height: "1000px",
+          minHeight: "1000px",
         }}
       >
         <SliderComponent arrImages={[tv, tv1, iphone, laptop, macbook]} />

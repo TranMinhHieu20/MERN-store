@@ -1,26 +1,34 @@
 import React from "react";
 import { Card } from "antd";
-import { StarFilled } from "@ant-design/icons";
+import { CheckOutlined, StarFilled } from "@ant-design/icons";
 import {
   StyleNameProduct,
   WrapperReportText,
   WrapperPriceText,
   WrapperDiscountText,
+  WrapperCardStyle,
+  ImageSale,
 } from "./style";
 
 const CardComponent = () => {
   return (
-    <Card
+    <WrapperCardStyle
       hoverable
-      style={{ width: 240 }}
+      style={{ width: 200 }}
       cover={
         <img
           alt="example"
-          bodyStyle={{ padding: "10px" }}
           src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
         />
       }
     >
+      <ImageSale>
+        <span>
+          <CheckOutlined />
+        </span>
+        <span>OFFICIAL</span>
+      </ImageSale>
+
       <StyleNameProduct>Iphone</StyleNameProduct>
       <WrapperReportText>
         <span>
@@ -37,7 +45,7 @@ const CardComponent = () => {
         <span style={{ fontSize: "12px", textDecoration: "underline" }}>đ</span>
         <WrapperDiscountText>-6%</WrapperDiscountText>
       </WrapperPriceText>
-    </Card>
+    </WrapperCardStyle>
   );
 };
 
