@@ -1,6 +1,10 @@
 import React from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import { WrapperButtonMore, WrapperTypeProduct } from "./style";
+import {
+  WrapperButtonMore,
+  WrapperTypeProduct,
+  WrapperProducts,
+} from "./style";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import tv from "../../assets/image/tv.jpg";
 import laptop from "../../assets/image/laptop.png";
@@ -8,8 +12,6 @@ import iphone from "../../assets/image/iphone.jpg";
 import tv1 from "../../assets/image/tv1.jpg";
 import macbook from "../../assets/image/macbook.jpeg";
 import CardComponent from "../../components/CardComponent/CardComponent";
-import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 const HomePage = () => {
   const arrs = [
@@ -41,18 +43,11 @@ const HomePage = () => {
           backgroundColor: "#efefef",
           padding: "0 120px",
           minHeight: "1000px",
+          width: "100%",
         }}
       >
         <SliderComponent arrImages={[tv, tv1, iphone, laptop, macbook]} />
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "20px",
-          }}
-        >
+        <WrapperProducts>
           <CardComponent />
           <CardComponent />
           <CardComponent />
@@ -66,7 +61,9 @@ const HomePage = () => {
           <CardComponent />
           <CardComponent />
           <CardComponent />
-        </div>
+          <CardComponent />
+          <CardComponent />
+        </WrapperProducts>
         <WrapperButtonMore
           textButton="Xem thêm"
           type="outline"
@@ -80,7 +77,6 @@ const HomePage = () => {
             margin: "20px auto 0",
           }}
         />
-        {/* <NavBarComponent /> */}
       </div>
     </>
   );

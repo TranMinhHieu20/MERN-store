@@ -47,7 +47,7 @@ const NavBarComponent = () => {
     }
   };
   return (
-    <div style={{ backgroundColor: "" }}>
+    <div>
       <div>
         <WrapperLabelText>Danh mục</WrapperLabelText>
         <WrapperContent>

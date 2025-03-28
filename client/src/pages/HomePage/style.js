@@ -20,3 +20,11 @@ export const WrapperButtonMore = styled(ButtonComponent)`
     color: #fff !important;
   }
 `;
+
+export const WrapperProducts = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 16px; /* Thêm khoảng cách giữa các card */
+`;
