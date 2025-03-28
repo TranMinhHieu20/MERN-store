@@ -26,5 +26,5 @@ export const WrapperProducts = styled.div`
   justify-content: center;
   margin-top: 20px;
   flex-wrap: wrap;
-  gap: 16px; /* Thêm khoảng cách giữa các card */
+  gap: 79px; /* Thêm khoảng cách giữa các card */
 `;
