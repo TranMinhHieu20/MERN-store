@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { CloseOutlined, LockFilled } from "@ant-design/icons";
+import { CloseOutlined } from "@ant-design/icons";
 export const WrapperContainerLeft = styled.div`
   flex: 1;
   padding: 40px 45px 24px;
