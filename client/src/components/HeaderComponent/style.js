@@ -30,4 +30,5 @@ export const WrapperTextHeaderSmall = styled.span`
   color: #fff;
   font-size: 12px;
   white-space: nowrap;
+  cursor: pointer;
 `;

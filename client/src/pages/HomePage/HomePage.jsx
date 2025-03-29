@@ -14,20 +14,7 @@ import macbook from "../../assets/image/macbook.jpeg";
 import CardComponent from "../../components/CardComponent/CardComponent";
 
 const HomePage = () => {
-  const arrs = [
-    "TV",
-    "Smart Phone",
-    "LapTop",
-    "Smart Phone",
-    "LapTop",
-    "Smart Phone",
-    "LapTop",
-    "Smart Phone",
-    "LapTop",
-    "Smart Phone",
-    "LapTop",
-    "Smart Phone",
-  ];
+  const arrs = ["TV", "Smart Phone", "LapTop"];
   return (
     <>
       <div style={{ padding: "0 120px" }}>

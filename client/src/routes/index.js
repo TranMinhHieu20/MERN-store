@@ -31,12 +31,12 @@ export const routes = [
   {
     path: "/sign-in",
     page: SignInPage,
-    isShowHeader: false,
+    isShowHeader: true,
   },
   {
     path: "/sign-up",
     page: SignUpPage,
-    isShowHeader: false,
+    isShowHeader: true,
   },
   {
     path: "/product-details",

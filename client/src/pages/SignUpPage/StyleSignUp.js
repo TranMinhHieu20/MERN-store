@@ -58,3 +58,18 @@ export const WrapperStyleLook = styled.div`
     color: #333;
   }
 `;
+export const WrapperStyleLookConfirmPassword = styled.div`
+  font-size: 12px;
+  position: absolute;
+  top: 50px;
+  right: 2px;
+  width: 40px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+    color: #333;
+  }
+`;

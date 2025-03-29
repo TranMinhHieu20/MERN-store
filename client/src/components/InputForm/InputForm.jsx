@@ -1,11 +1,21 @@
 import React, { useState } from "react";
-import { Input } from "antd";
+import { WrapperInputStyle } from "./styleInputForm";
 
 const InputForm = (props) => {
-  const { placeholder } = props;
+  const { placeholder, styleInputForm, type, hoverBorderColor } = props;
   // eslint-disable-next-line
   const [valueInput, setValueInput] = useState("");
-  return <Input placeholder={placeholder} valueInput={valueInput} />;
+  return (
+    <WrapperInputStyle
+      hoverBorderColor={hoverBorderColor}
+      type={type}
+      placeholder={placeholder}
+      valueInput={valueInput}
+      style={{
+        ...styleInputForm,
+      }}
+    />
+  );
 };
 
 export default InputForm;
