@@ -1,3 +1,30 @@
 const jwt = require("jsonwebtoken");
 
-export const generalAccessToken = (payload = {});
+//access_token
+const generalAccessToken = (payload) => {
+  console.log("payload: ", payload);
+  const access_token = jwt.sign(
+    {
+      payload,
+    },
+    "access_token",
+    { expiresIn: "1h" }
+  );
+  return access_token;
+};
+
+//refresh_token
+const generalRefreshToken = (payload) => {
+  const refresh_token = jwt.sign(
+    {
+      payload,
+    },
+    "refresh_token",
+    { expiresIn: "365d" }
+  );
+  return refresh_token;
+};
+module.exports = {
+  generalAccessToken,
+  generalRefreshToken,
+};
