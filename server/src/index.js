@@ -10,6 +10,7 @@ const URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(express.json()); // ✅ Bắt buộc để đọc dữ liệu JSON từ req.body
 app.use(bodyParser.json());
 
 mongoose
