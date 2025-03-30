@@ -68,11 +68,12 @@ const loginUser = (userLogin) => {
       console.log("access_token: ", access_token);
       //refresh_token
       const refresh_token = await generalRefreshToken({});
-      console.log("access_token: ", refresh_token);
+      console.log("refresh_token: ", refresh_token);
 
       return resolve({
         status: "Ok",
         message: "User Login Successfully",
+        checkUser,
         access_token,
         refresh_token,
       });
@@ -83,7 +84,37 @@ const loginUser = (userLogin) => {
     }
   });
 };
+
+//sign-in(login)
+const updateUser = (id, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUser = await User.findOne({ _id: id });
+      console.log("CheckUser: ", checkUser);
+      if (!checkUser) {
+        return resolve({
+          status: "Err",
+          message: "The user is not registered!",
+        });
+      }
+      const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
+      console.log("updatedUser: ", updatedUser);
+
+      return resolve({
+        status: "Ok",
+        message: "User Update Successfully",
+        data: updatedUser,
+      });
+
+      // }
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
+  updateUser,
 };

@@ -60,7 +60,29 @@ const loginUser = async (req, res) => {
   }
 };
 
+//updateUser
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const data = req.body;
+
+    if (!userId) {
+      return res.status(400).json({
+        status: "Err",
+        message: "User not found!",
+      });
+    }
+
+    const response = await UserService.updateUser(userId, data);
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error creating user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
+  updateUser,
 };
