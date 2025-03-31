@@ -1,4 +1,5 @@
 const UserService = require("../services/UserService");
+const JwtService = require("../services/JwtService");
 
 //sign-up
 const createUser = async (req, res) => {
@@ -133,6 +134,27 @@ const getDetailsUser = async (req, res) => {
   }
 };
 
+//refreshToken
+
+const refreshToken = async (req, res) => {
+  try {
+    const token = req.headers.token.split(" ")[1];
+
+    if (!token) {
+      return res.status(400).json({
+        status: "Err",
+        message: "The token is required!",
+      });
+    }
+
+    const response = await JwtService.refreshTokenJwtService(token);
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error dE user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -140,4 +162,5 @@ module.exports = {
   deleteUser,
   getAllUser,
   getDetailsUser,
+  refreshToken,
 };
