@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
     const response = await UserService.loginUser(req.body);
     return res.status(201).json(response);
   } catch (error) {
-    console.log("Error creating user:", error);
+    console.log("Error loginUser user:", error);
     return res.status(500).json({ message: error });
   }
 };
@@ -76,7 +76,59 @@ const updateUser = async (req, res) => {
     const response = await UserService.updateUser(userId, data);
     return res.status(201).json(response);
   } catch (error) {
-    console.log("Error creating user:", error);
+    console.log("Error updateUser user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+
+//deleteUser
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    // const token = req.headers;
+
+    if (!userId) {
+      return res.status(400).json({
+        status: "Err",
+        message: "User not found!",
+      });
+    }
+
+    const response = await UserService.deleteUser(userId);
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error DELETE user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+
+//getAllUser
+const getAllUser = async (req, res) => {
+  try {
+    const response = await UserService.getAllUser();
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error GET ALL USER user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+
+//getDetailsUser
+const getDetailsUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        status: "Err",
+        message: "User not found!",
+      });
+    }
+
+    const response = await UserService.getDetailsUser(userId);
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error dE user:", error);
     return res.status(500).json({ message: error });
   }
 };
@@ -85,4 +137,7 @@ module.exports = {
   createUser,
   loginUser,
   updateUser,
+  deleteUser,
+  getAllUser,
+  getDetailsUser,
 };

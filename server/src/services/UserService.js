@@ -49,7 +49,7 @@ const loginUser = (userLogin) => {
           message: "The user is not registered!",
         });
       }
-      const comparePassword = await bcrypt.compareSync(
+      const comparePassword = await bcrypt.compare(
         password,
         checkUser.password
       );
@@ -67,7 +67,7 @@ const loginUser = (userLogin) => {
       });
       console.log("access_token: ", access_token);
       //refresh_token
-      const refresh_token = await generalRefreshToken({});
+      const refresh_token = await generalRefreshToken({ id: checkUser._id });
       console.log("refresh_token: ", refresh_token);
 
       return resolve({
@@ -113,8 +113,81 @@ const updateUser = (id, data) => {
   });
 };
 
+//deleteUser
+const deleteUser = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUser = await User.findOne({ _id: id });
+      console.log("CheckUser: ", checkUser);
+      if (!checkUser) {
+        return resolve({
+          status: "Err",
+          message: "The user is not registered!",
+        });
+      }
+      const deletedUser = await User.findByIdAndDelete(id);
+
+      return resolve({
+        status: "Ok",
+        message: "User DELETED Successfully",
+      });
+
+      // }
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+//getAllUser
+const getAllUser = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allUser = await User.find();
+
+      return resolve({
+        status: "Ok",
+        message: "Get All User Successfully",
+        data: allUser,
+      });
+
+      // }
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+//getDetailsUser
+const getDetailsUser = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findOne({ _id: id });
+      if (!user) {
+        return resolve({
+          status: "Err",
+          message: "The user is not registered!",
+        });
+      }
+
+      return resolve({
+        status: "Ok",
+        message: "Get Details User Successfully",
+        data: user,
+      });
+
+      // }
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
   updateUser,
+  deleteUser,
+  getAllUser,
+  getDetailsUser,
 };

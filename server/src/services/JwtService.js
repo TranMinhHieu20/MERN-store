@@ -25,6 +25,7 @@ const generalRefreshToken = (payload) => {
   );
   return refresh_token;
 };
+
 module.exports = {
   generalAccessToken,
   generalRefreshToken,
