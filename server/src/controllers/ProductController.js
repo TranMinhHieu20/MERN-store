@@ -19,7 +19,45 @@ const createProduct = async (req, res) => {
     return res.status(500).json({ message: error });
   }
 };
+// update product
+const updateProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const data = req.body;
+    if (!productId) {
+      return res.status(400).json({
+        status: "Err",
+        message: "productId not found!",
+      });
+    }
+    const response = await ProductService.updateProduct(productId, data);
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error creating user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+// get details product
+const getDetailsProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    if (!productId) {
+      return res.status(400).json({
+        status: "Err",
+        message: "productId not found!",
+      });
+    }
+    const response = await ProductService.getDetailsProduct(productId);
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error creating user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
 
 module.exports = {
   createProduct,
+  updateProduct,
+  getDetailsProduct,
 };

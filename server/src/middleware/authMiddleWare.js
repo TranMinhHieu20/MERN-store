@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 
-// allow delete user if isAdmin
+// allow  user if isAdmin
 const authMiddleWare = (req, res, next) => {
   console.log("checkToken: ", req.headers.token);
   const token = req.headers.token.split(" ")[1];
