@@ -26,7 +26,7 @@ const generalRefreshToken = (payload) => {
   return refresh_token;
 };
 ///
-//refresh_token
+//refresh_token when token expired => token new
 const refreshTokenJwtService = (token) => {
   return new Promise(async (resolve, reject) => {
     try {

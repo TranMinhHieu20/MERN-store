@@ -55,9 +55,39 @@ const getDetailsProduct = async (req, res) => {
     return res.status(500).json({ message: error });
   }
 };
+// delete product
+const deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    if (!productId) {
+      return res.status(400).json({
+        status: "Err",
+        message: "productId not found!",
+      });
+    }
+    const response = await ProductService.deleteProduct(productId);
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error creating user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+// getAllProduct
+const getAllProduct = async (req, res) => {
+  try {
+    const response = await ProductService.getAllProduct();
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("Error getALL product:", error);
+    return res.status(500).json({ message: error });
+  }
+};
 
 module.exports = {
   createProduct,
   updateProduct,
   getDetailsProduct,
+  deleteProduct,
+  getAllProduct,
 };

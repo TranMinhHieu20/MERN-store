@@ -78,8 +78,47 @@ const getDetailsProduct = (productId) => {
   });
 };
 
+// delete product
+const deleteProduct = (productId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkProductId = await Product.findOne({ _id: productId });
+      if (!checkProductId) {
+        resolve({ status: "ERROR", message: "The product is not registered!" });
+      }
+      await Product.findByIdAndDelete(productId);
+
+      return resolve({
+        status: "Ok",
+        message: "DELETE Product Successfully",
+      });
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+// getAllProduct
+const getAllProduct = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allProducts = await Product.find();
+
+      return resolve({
+        status: "Ok",
+        message: "getAll Product Successfully",
+        data: allProducts,
+      });
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   updateProduct,
   getDetailsProduct,
+  deleteProduct,
+  getAllProduct,
 };
