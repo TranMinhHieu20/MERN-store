@@ -76,11 +76,12 @@ const deleteProduct = async (req, res) => {
 // getAllProduct
 const getAllProduct = async (req, res) => {
   try {
-    console.log("limit, page: ", req.query);
-    const { limit, page } = req.query;
+    const { limit, page, sort, filter } = req.query;
     const response = await ProductService.getAllProduct(
       Number(limit) || 8,
-      Number(page) || 0
+      Number(page) || 0,
+      sort,
+      filter
     );
     return res.status(201).json(response);
   } catch (error) {
