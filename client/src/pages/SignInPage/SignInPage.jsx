@@ -12,6 +12,8 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { Image } from "antd";
 import imageSignInSignUp from "../../assets/image/imageSignInSignUp.avif";
 import { LockFilled, UnlockFilled } from "@ant-design/icons";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import * as UserService from "../../Services/UseService";
 
 const SignIpPage = () => {
   const navigate = useNavigate();
@@ -22,15 +24,18 @@ const SignIpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const mutation = useMutationHook((data) => UserService.loginUser(data));
+  console.log("mutationFn: ", mutation);
+
+  const { data, isLoading } = mutation;
+
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
 
   const handleOnchangeEmail = (e) => {
     setEmail(e.target.value);
-    console.log("Email:", e.target.value);
   };
   const handleOnchangePassword = (e) => {
     setPassword(e.target.value);
-    console.log("Password:", e.target.value);
   };
 
   const handleNavigateSignUp = () => {
@@ -38,6 +43,10 @@ const SignIpPage = () => {
   };
 
   const handleSignIn = () => {
+    mutation.mutate({
+      email,
+      password,
+    });
     console.log("sign-in: ", email, password);
   };
 
@@ -88,6 +97,16 @@ const SignIpPage = () => {
               {isLock ? <LockFilled /> : <UnlockFilled />}
             </WrapperStyleLook>
           </div>
+          {data?.status === "Ok" && (
+            <span style={{ color: "#01debf", marginTop: "5px" }}>
+              {data?.message}
+            </span>
+          )}
+          {data?.status === "Err" && (
+            <span style={{ color: "red", marginTop: "5px" }}>
+              {data?.message}
+            </span>
+          )}
 
           <ButtonComponent
             disabled={

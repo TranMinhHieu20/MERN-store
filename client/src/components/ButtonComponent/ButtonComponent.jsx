@@ -3,7 +3,7 @@ import { Button } from "antd";
 const ButtonComponent = ({
   size,
   colorButton,
-  styleButton,
+  styleButton = {},
   styleTextButton,
   textButton,
   disabled,

@@ -34,10 +34,10 @@ const createUser = async (req, res) => {
 //sign-in
 const loginUser = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, phone } = req.body;
+    const { email, password } = req.body;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isCheckEmail = emailRegex.test(email);
-    if (!name || !email || !password || !confirmPassword || !phone) {
+    if (!email || !password) {
       return res.status(400).json({
         status: "Err",
         message: "All fields are required!",
@@ -46,11 +46,6 @@ const loginUser = async (req, res) => {
       return res.status(400).json({
         status: "Err",
         message: "Invalid email format!",
-      });
-    } else if (password !== confirmPassword) {
-      return res.status(400).json({
-        status: "Err",
-        message: "Password and confirm password do not match!",
       });
     }
     const response = await UserService.loginUser(req.body);
