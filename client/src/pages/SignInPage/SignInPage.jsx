@@ -14,11 +14,32 @@ import imageSignInSignUp from "../../assets/image/imageSignInSignUp.avif";
 import { LockFilled, UnlockFilled } from "@ant-design/icons";
 
 const SignIpPage = () => {
-  const [isOpen, setIsOpen] = useState(true); // State để kiểm soát hiển thị
-  const [isLock, setIsLock] = useState(true);
   const navigate = useNavigate();
 
+  const [isOpen, setIsOpen] = useState(true); // State để kiểm soát hiển thị
+  const [isLock, setIsLock] = useState(true);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
+
+  const handleOnchangeEmail = (e) => {
+    setEmail(e.target.value);
+    console.log("Email:", e.target.value);
+  };
+  const handleOnchangePassword = (e) => {
+    setPassword(e.target.value);
+    console.log("Password:", e.target.value);
+  };
+
+  const handleNavigateSignUp = () => {
+    navigate("/sign-up");
+  };
+
+  const handleSignIn = () => {
+    console.log("sign-in: ", email, password);
+  };
 
   return (
     <div
@@ -48,6 +69,8 @@ const SignIpPage = () => {
             type="text"
             placeholder="abc@email.com"
             styleInputForm={{ paddingRight: "50px" }}
+            value={email}
+            handleOnchange={handleOnchangeEmail}
           />
           <div style={{ position: "relative" }}>
             <InputForm
@@ -58,6 +81,8 @@ const SignIpPage = () => {
                 marginTop: "10px",
                 paddingRight: "50px",
               }}
+              value={password}
+              handleOnchange={handleOnchangePassword}
             />
             <WrapperStyleLook onClick={() => setIsLock(!isLock)}>
               {isLock ? <LockFilled /> : <UnlockFilled />}
@@ -65,7 +90,11 @@ const SignIpPage = () => {
           </div>
 
           <ButtonComponent
-            border={false}
+            disabled={
+              email.length === 0 || password.length === 0 ? true : false
+            }
+            onClick={handleSignIn}
+            // border={false}
             size={20}
             styleButton={{
               background: "#01debf",
@@ -89,7 +118,7 @@ const SignIpPage = () => {
               Chưa có tài khoản?{" "}
               <span
                 style={{ color: "#01debf", cursor: "pointer" }}
-                onClick={() => navigate("/sign-up")}
+                onClick={handleNavigateSignUp}
               >
                 Tạo tài khoản
               </span>

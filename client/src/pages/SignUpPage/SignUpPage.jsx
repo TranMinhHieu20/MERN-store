@@ -4,7 +4,7 @@ import {
   WrapperContainerRight,
   WrapperContainerRightClose,
   WrapperContainerRightTitle,
-  WrapperStyleLook,
+  WrapperStyleLookPassword,
   WrapperStyleLookConfirmPassword,
 } from "./StyleSignUp";
 import InputForm from "../../components/InputForm/InputForm";
@@ -15,11 +15,37 @@ import { LockFilled, UnlockFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true); // State để kiểm soát hiển thị
   const [isLock, setIsLock] = useState(true);
   const [isLockConfirm, setIsLockConfirm] = useState(true);
-  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
+
+  const handleOnchangeEmail = (e) => {
+    setEmail(e.target.value);
+    console.log("Email:", e.target.value);
+  };
+  const handleOnchangePassword = (e) => {
+    setPassword(e.target.value);
+    console.log("Password:", e.target.value);
+  };
+  const handleOnchangeConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+    console.log("Confirm Password:", e.target.value);
+  };
+
+  const handleNavigateSignIn = () => {
+    navigate("/sign-in");
+  };
+
+  const handleSignUp = () => {
+    console.log("sign-up: ", email, password, confirmPassword);
+  };
 
   return (
     <div
@@ -49,29 +75,35 @@ const SignUpPage = () => {
             type="text"
             placeholder="abc@email.com"
             styleInputForm={{ paddingRight: "50px" }}
+            value={email}
+            handleOnchange={handleOnchangeEmail}
           />
           <div style={{ position: "relative" }}>
             <InputForm
-              hoverBorderColor={false}
+              // hoverBorderColor={false}
               type={isLock ? "password" : "text"}
               placeholder="Password"
               styleInputForm={{
                 marginTop: "10px",
                 paddingRight: "50px",
               }}
+              value={password}
+              handleOnchange={handleOnchangePassword}
             />
             <InputForm
-              hoverBorderColor={false}
+              // hoverBorderColor={false}
               type={isLockConfirm ? "password" : "text"}
               placeholder="Confirm Password"
               styleInputForm={{
                 marginTop: "10px",
                 paddingRight: "50px",
               }}
+              value={confirmPassword}
+              handleOnchange={handleOnchangeConfirmPassword}
             />
-            <WrapperStyleLook onClick={() => setIsLock(!isLock)}>
+            <WrapperStyleLookPassword onClick={() => setIsLock(!isLock)}>
               {isLock ? <LockFilled /> : <UnlockFilled />}
-            </WrapperStyleLook>
+            </WrapperStyleLookPassword>
             <WrapperStyleLookConfirmPassword
               onClick={() => setIsLockConfirm(!isLockConfirm)}
             >
@@ -80,7 +112,15 @@ const SignUpPage = () => {
           </div>
 
           <ButtonComponent
-            border={false}
+            onClick={handleSignUp}
+            disabled={
+              email.length === 0 ||
+              password.length === 0 ||
+              confirmPassword.length === 0
+                ? true
+                : false
+            }
+            // border={false}
             size={20}
             styleButton={{
               background: "#01debf",
@@ -99,7 +139,7 @@ const SignUpPage = () => {
               Đã có tài khoản?{" "}
               <span
                 style={{ color: "#01debf", cursor: "pointer" }}
-                onClick={() => navigate("/sign-in")}
+                onClick={handleNavigateSignIn}
               >
                 Đăng nhập
               </span>

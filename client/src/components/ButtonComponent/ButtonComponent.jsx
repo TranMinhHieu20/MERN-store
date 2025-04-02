@@ -6,11 +6,20 @@ const ButtonComponent = ({
   styleButton,
   styleTextButton,
   textButton,
+  disabled,
   ...rest
 }) => {
   return (
     <>
-      <Button size={size} style={styleButton} {...rest}>
+      <Button
+        style={{
+          ...styleButton,
+          background: disabled ? "#ccc" : styleButton.background,
+        }}
+        disabled={disabled}
+        size={size}
+        {...rest}
+      >
         {textButton}
       </Button>
     </>

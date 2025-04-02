@@ -43,7 +43,7 @@ export const WrapperContainerRightTitle = styled.h4`
   white-space: nowrap;
 `;
 
-export const WrapperStyleLook = styled.div`
+export const WrapperStyleLookPassword = styled.div`
   font-size: 12px;
   position: absolute;
   top: 10px;

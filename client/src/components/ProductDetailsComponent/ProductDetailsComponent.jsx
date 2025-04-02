@@ -132,7 +132,7 @@ const ProductDetailsComponent = () => {
         </div>
         <div style={{ marginTop: "15px" }}>
           <ButtonComponent
-            border={false}
+            // border={false}
             size={20}
             styleButton={{
               background: "rgb(255,57,69)",
@@ -146,7 +146,7 @@ const ProductDetailsComponent = () => {
             textButton="Mua ngay"
           />
           <ButtonComponent
-            border={false}
+            // border={false}
             size={20}
             styleButton={{
               background: "rgb(255, 255, 255)",

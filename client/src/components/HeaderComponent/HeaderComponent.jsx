@@ -16,6 +16,9 @@ import { useNavigate } from "react-router-dom";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
+  const handleNavigateLogin = () => {
+    navigate("/sign-in");
+  };
   return (
     <div>
       <WrapperHeader gutter={0}>
@@ -32,14 +35,12 @@ const HeaderComponent = () => {
         <Col span={6} style={{ display: "flex", gap: 10 }}>
           <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: 22, marginLeft: 10 }} />
-            <div>
+            <div onClick={handleNavigateLogin}>
               <WrapperTextHeaderSmall onClick={() => navigate("/sign-in")}>
-                Đăng nhập
+                Đăng nhập/Đăng ký
               </WrapperTextHeaderSmall>
               <WrapperTextHeaderSmall>/</WrapperTextHeaderSmall>
-              <WrapperTextHeaderSmall onClick={() => navigate("/sign-up")}>
-                Đăng ký
-              </WrapperTextHeaderSmall>
+
               <div>
                 <span style={{ fontSize: 14, cursor: "pointer" }}>
                   Tài Khoản

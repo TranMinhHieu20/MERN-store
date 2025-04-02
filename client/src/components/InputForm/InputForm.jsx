@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { WrapperInputStyle } from "./styleInputForm";
 
 const InputForm = (props) => {
-  const { placeholder, styleInputForm, type, hoverBorderColor } = props;
   // eslint-disable-next-line
-  const [valueInput, setValueInput] = useState("");
+  const { placeholder, styleInputForm, type, hoverBorderColor } = props;
   return (
     <WrapperInputStyle
-      hoverBorderColor={hoverBorderColor}
+      // hoverBorderColor={hoverBorderColor}
       type={type}
       placeholder={placeholder}
-      valueInput={valueInput}
+      value={props.value}
+      onChange={props.handleOnchange}
       style={{
         ...styleInputForm,
       }}
