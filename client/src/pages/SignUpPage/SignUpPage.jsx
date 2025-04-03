@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   WrapperContainerLeft,
   WrapperContainerRight,
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import * as UserService from "../../Services/UseService";
 import Loading from "../../components/LoadingComponent/Loading";
+import * as message from "../../components/Message/Message";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -30,9 +31,16 @@ const SignUpPage = () => {
   const [isSpinLoading, setIsSpinLoading] = useState(false);
 
   const mutation = useMutationHook((data) => UserService.signUpUser(data));
-  console.log("mutationFn: ", mutation);
+  console.log("mutation: ", mutation);
   // eslint-disable-next-line
   const { data, isLoading } = mutation;
+
+  useEffect(() => {
+    if (data?.status === "Ok") {
+      handleNavigateSignIn();
+      message.success(data?.message);
+    }
+  });
 
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
 
@@ -54,6 +62,9 @@ const SignUpPage = () => {
   };
 
   const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      alert("Password and confirm password do not match!");
+    }
     setIsSpinLoading(true);
     try {
       await mutation.mutateAsync({

@@ -53,7 +53,7 @@ const loginUser = (userLogin) => {
         password,
         checkUser.password
       );
-      console.log("comparePassword: ", comparePassword);
+      // console.log("comparePassword: ", comparePassword);
       if (!comparePassword) {
         return resolve({
           status: "Err",
@@ -65,10 +65,10 @@ const loginUser = (userLogin) => {
         id: checkUser._id,
         isAdmin: checkUser.isAdmin,
       });
-      console.log("access_token: ", access_token);
+      // console.log("access_token: ", access_token);
       //refresh_token
       const refresh_token = await generalRefreshToken({ id: checkUser._id });
-      console.log("refresh_token: ", refresh_token);
+      // console.log("refresh_token: ", refresh_token);
 
       return resolve({
         status: "Ok",
@@ -85,7 +85,7 @@ const loginUser = (userLogin) => {
   });
 };
 
-//sign-in(login)
+//updateUser
 const updateUser = (id, data) => {
   return new Promise(async (resolve, reject) => {
     try {

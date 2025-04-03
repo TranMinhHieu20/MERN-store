@@ -49,6 +49,12 @@ const loginUser = async (req, res) => {
       });
     }
     const response = await UserService.loginUser(req.body);
+    const { refresh_token, ...newResponse } = response;
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true, // Đảm bảo cookie không thể truy cập từ JavaScript phía client
+      secure: process.env.NODE_ENV === "production", // Đảm bảo cookie chỉ được gửi qua HTTPS (chỉ sử dụng khi bạn triển khai trên môi trường bảo mật)
+    });
+
     return res.status(201).json(response);
   } catch (error) {
     console.log("Error loginUser user:", error);
@@ -133,8 +139,7 @@ const getDetailsUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.headers.token.split(" ")[1];
-
+    const token = req.cookies.refresh_token;
     if (!token) {
       return res.status(400).json({
         status: "Err",

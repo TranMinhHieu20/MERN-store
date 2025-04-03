@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   WrapperContainerLeft,
@@ -15,6 +15,8 @@ import { LockFilled, UnlockFilled } from "@ant-design/icons";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import * as UserService from "../../Services/UseService";
 import Loading from "../../components/LoadingComponent/Loading";
+import * as message from "../../components/Message/Message";
+import { jwtDecode } from "jwt-decode";
 
 const SignIpPage = () => {
   const navigate = useNavigate();
@@ -32,6 +34,25 @@ const SignIpPage = () => {
   // eslint-disable-next-line
   const { data, isLoading } = mutation;
 
+  useEffect(() => {
+    if (data?.status === "Ok") {
+      // navigate("/");
+      message.success(data?.message);
+      localStorage.setItem("access_token: ", data?.access_token);
+      if (data?.access_token) {
+        const decoded = jwtDecode(data?.access_token);
+        console.log("decode: ", decoded);
+        if (decoded?.id) {
+          handleGetDetailsUser(decoded?.id, data?.access_token);
+        }
+      }
+    }
+  });
+
+  const handleGetDetailsUser = async (id, access_token) => {
+    const res = await UserService.getDetailsUser(id, access_token);
+    console.log("res hanldeget: ", res);
+  };
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
 
   const handleOnchangeEmail = (e) => {
