@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
     const { name, email, password, confirmPassword, phone } = req.body;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isCheckEmail = emailRegex.test(email);
-    if (!name || !email || !password || !confirmPassword || !phone) {
+    if (!email || !password || !confirmPassword) {
       return res.status(400).json({
         status: "Err",
         message: "All fields are required!",

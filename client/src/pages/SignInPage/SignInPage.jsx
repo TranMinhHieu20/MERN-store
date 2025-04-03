@@ -14,6 +14,7 @@ import imageSignInSignUp from "../../assets/image/imageSignInSignUp.avif";
 import { LockFilled, UnlockFilled } from "@ant-design/icons";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import * as UserService from "../../Services/UseService";
+import Loading from "../../components/LoadingComponent/Loading";
 
 const SignIpPage = () => {
   const navigate = useNavigate();
@@ -24,9 +25,11 @@ const SignIpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isSpinLoading, setIsSpinLoading] = useState(false);
+
   const mutation = useMutationHook((data) => UserService.loginUser(data));
   console.log("mutationFn: ", mutation);
-
+  // eslint-disable-next-line
   const { data, isLoading } = mutation;
 
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
@@ -42,11 +45,17 @@ const SignIpPage = () => {
     navigate("/sign-up");
   };
 
-  const handleSignIn = () => {
-    mutation.mutate({
-      email,
-      password,
-    });
+  const handleSignIn = async () => {
+    setIsSpinLoading(true);
+    try {
+      await mutation.mutateAsync({
+        email,
+        password,
+      });
+    } catch (error) {
+      console.log("error login: ", error);
+    }
+    setIsSpinLoading(false);
     console.log("sign-in: ", email, password);
   };
 
@@ -67,6 +76,8 @@ const SignIpPage = () => {
           borderRadius: "6px",
           backgroundColor: "#fff",
           display: "flex",
+          filter: isSpinLoading ? "grayscale(50%) opacity(0.7)" : "none", // Giảm màu và độ trong suốt khi loading
+          pointerEvents: isSpinLoading ? "none" : "auto", // Vô hiệu hóa tương tác khi loading
 
           // alignItems: "center",
         }}
@@ -107,10 +118,9 @@ const SignIpPage = () => {
               {data?.message}
             </span>
           )}
-
           <ButtonComponent
             disabled={
-              email.length === 0 || password.length === 0 ? true : false
+              email.length === 0 || password.length === 0 || isSpinLoading
             }
             onClick={handleSignIn}
             // border={false}
@@ -125,8 +135,21 @@ const SignIpPage = () => {
               marginRight: "10px",
               marginTop: "20px",
             }}
-            textButton="Đăng nhập"
-          />
+            textButton={isSpinLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+          ></ButtonComponent>
+          <span style={{ position: "relative" }}>
+            {isSpinLoading && (
+              <span
+                style={{
+                  position: "absolute",
+                  right: "30px",
+                  top: "-45px",
+                }}
+              >
+                <Loading />
+              </span>
+            )}
+          </span>
           <div style={{ marginTop: "20px" }}>
             <p
               style={{ color: "#01debf", fontSize: "12px", cursor: "pointer" }}

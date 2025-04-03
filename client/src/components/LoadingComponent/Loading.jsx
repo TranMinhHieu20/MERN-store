@@ -1,9 +1,8 @@
 import React from "react";
-import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
-const Loading = ({ children, isLoading, delay = 200 }) => {
-  return <Spin indicator={<LoadingOutlined spin />} size="small" />;
+const Loading = ({ delay = 500 }) => {
+  return <Spin delay={delay}></Spin>;
 };
 
 export default Loading;

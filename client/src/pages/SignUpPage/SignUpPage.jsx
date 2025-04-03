@@ -13,6 +13,9 @@ import { Image } from "antd";
 import imageSignInSignUp from "../../assets/image/imageSignInSignUp.avif";
 import { LockFilled, UnlockFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import * as UserService from "../../Services/UseService";
+import Loading from "../../components/LoadingComponent/Loading";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -23,6 +26,13 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [isSpinLoading, setIsSpinLoading] = useState(false);
+
+  const mutation = useMutationHook((data) => UserService.signUpUser(data));
+  console.log("mutationFn: ", mutation);
+  // eslint-disable-next-line
+  const { data, isLoading } = mutation;
 
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
 
@@ -43,7 +53,18 @@ const SignUpPage = () => {
     navigate("/sign-in");
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
+    setIsSpinLoading(true);
+    try {
+      await mutation.mutateAsync({
+        email,
+        password,
+        confirmPassword,
+      });
+    } catch (error) {
+      console.log("ERROR signUp: ", error);
+    }
+    setIsSpinLoading(false);
     console.log("sign-up: ", email, password, confirmPassword);
   };
 
@@ -64,6 +85,9 @@ const SignUpPage = () => {
           borderRadius: "6px",
           backgroundColor: "#fff",
           display: "flex",
+
+          filter: isSpinLoading ? "grayscale(50%) opacity(0.7)" : "none", // Giảm màu và độ trong suốt khi loading
+          pointerEvents: isSpinLoading ? "none" : "auto", // Vô hiệu hóa tương tác khi loading
 
           // alignItems: "center",
         }}
@@ -109,6 +133,16 @@ const SignUpPage = () => {
             >
               {isLockConfirm ? <LockFilled /> : <UnlockFilled />}
             </WrapperStyleLookConfirmPassword>
+            {data?.status === "Ok" && (
+              <span style={{ color: "#01debf", marginTop: "5px" }}>
+                {data?.message}
+              </span>
+            )}
+            {data?.status === "Err" && (
+              <span style={{ color: "red", marginTop: "5px" }}>
+                {data?.message}
+              </span>
+            )}
           </div>
 
           <ButtonComponent
@@ -116,9 +150,8 @@ const SignUpPage = () => {
             disabled={
               email.length === 0 ||
               password.length === 0 ||
-              confirmPassword.length === 0
-                ? true
-                : false
+              confirmPassword.length === 0 ||
+              isSpinLoading
             }
             // border={false}
             size={20}
@@ -132,8 +165,17 @@ const SignUpPage = () => {
               marginRight: "10px",
               marginTop: "20px",
             }}
-            textButton="Đăng ký"
+            textButton={isSpinLoading ? "Đang đăng ký..." : "Đăng ký"}
           />
+          <span style={{ position: "relative" }}>
+            {isSpinLoading && (
+              <span
+                style={{ position: "absolute", right: "30px", top: "-90px" }}
+              >
+                <Loading />
+              </span>
+            )}
+          </span>
           <div style={{ marginTop: "20px" }}>
             <p style={{ fontSize: "12px" }}>
               Đã có tài khoản?{" "}
