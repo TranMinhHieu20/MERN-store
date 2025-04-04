@@ -13,9 +13,13 @@ import {
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
+
+  const user = useSelector((state) => state.user);
+  console.log("user state: ", user);
   const handleNavigateLogin = () => {
     navigate("/sign-in");
   };
@@ -35,19 +39,25 @@ const HeaderComponent = () => {
         <Col span={6} style={{ display: "flex", gap: 10 }}>
           <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: 22, marginLeft: 10 }} />
-            <div onClick={handleNavigateLogin}>
-              <WrapperTextHeaderSmall onClick={() => navigate("/sign-in")}>
-                Đăng nhập/Đăng ký
-              </WrapperTextHeaderSmall>
-              <WrapperTextHeaderSmall>/</WrapperTextHeaderSmall>
-
-              <div>
-                <span style={{ fontSize: 14, cursor: "pointer" }}>
-                  Tài Khoản
-                </span>
-                <CaretDownOutlined />
+            {user?.name ? (
+              <div style={{ fontSize: 14, cursor: "pointer" }}>
+                {user?.name}
               </div>
-            </div>
+            ) : (
+              <div onClick={handleNavigateLogin}>
+                <WrapperTextHeaderSmall onClick={() => navigate("/sign-in")}>
+                  Đăng nhập/Đăng ký
+                </WrapperTextHeaderSmall>
+                <WrapperTextHeaderSmall>/</WrapperTextHeaderSmall>
+
+                <div>
+                  <span style={{ fontSize: 14, cursor: "pointer" }}>
+                    Tài Khoản
+                  </span>
+                  <CaretDownOutlined />
+                </div>
+              </div>
+            )}
           </WrapperHeaderAccount>
           <div
             style={{ display: "flex", alignItems: "center", marginLeft: 10 }}

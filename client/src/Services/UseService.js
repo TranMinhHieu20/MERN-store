@@ -41,8 +41,8 @@ export const getDetailsUser = async (id, access_token) => {
     const res = await axios.get(
       `${process.env.REACT_APP_API_URL_BACKEND}/user/get-details/${id}`,
       {
-        Header: {
-          token: `Beare ${access_token}`,
+        headers: {
+          token: `Bearer ${access_token}`,
         },
       }
     );

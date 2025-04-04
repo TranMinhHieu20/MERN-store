@@ -17,6 +17,8 @@ import * as UserService from "../../Services/UseService";
 import Loading from "../../components/LoadingComponent/Loading";
 import * as message from "../../components/Message/Message";
 import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../redux/slices/userSlice";
 
 const SignIpPage = () => {
   const navigate = useNavigate();
@@ -29,6 +31,8 @@ const SignIpPage = () => {
 
   const [isSpinLoading, setIsSpinLoading] = useState(false);
 
+  const dispatch = useDispatch();
+
   const mutation = useMutationHook((data) => UserService.loginUser(data));
   console.log("mutationFn: ", mutation);
   // eslint-disable-next-line
@@ -36,7 +40,7 @@ const SignIpPage = () => {
 
   useEffect(() => {
     if (data?.status === "Ok") {
-      // navigate("/");
+      navigate("/");
       message.success(data?.message);
       localStorage.setItem("access_token: ", data?.access_token);
       if (data?.access_token) {
@@ -49,9 +53,10 @@ const SignIpPage = () => {
     }
   });
 
-  const handleGetDetailsUser = async (id, access_token) => {
-    const res = await UserService.getDetailsUser(id, access_token);
-    console.log("res hanldeget: ", res);
+  const handleGetDetailsUser = async (id, token) => {
+    const res = await UserService.getDetailsUser(id, token);
+    dispatch(updateUser({ ...res?.data, access_token: token }));
+    console.log("res handle get details user: ", res);
   };
   if (!isOpen) return null; // Nếu isOpen = false, không render gì cả
 

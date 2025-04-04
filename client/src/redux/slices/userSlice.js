@@ -10,7 +10,13 @@ export const userSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    updateUser: (state, action) => {},
+    updateUser: (state, action) => {
+      const { name, email, access_token } = action.payload;
+      console.log("action.payload: ", action);
+      state.name = name || email;
+      state.email = email;
+      state.access_token = access_token;
+    },
   },
 });
 
