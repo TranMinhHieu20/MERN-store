@@ -35,6 +35,7 @@ const HeaderComponent = () => {
     localStorage.removeItem("access_token");
     setTimeout(() => {
       dispatch(resetUser());
+      navigate("/");
       setIsLoading(false);
     }, 1500);
   };
@@ -43,7 +44,9 @@ const HeaderComponent = () => {
       <WrapperContextInfoUser onClick={handleLogout}>
         Đăng xuất
       </WrapperContextInfoUser>
-      <WrapperContextInfoUser>Thông tin người dùng</WrapperContextInfoUser>
+      <WrapperContextInfoUser onClick={() => navigate("/profile-user")}>
+        Thông tin người dùng
+      </WrapperContextInfoUser>
     </div>
   );
   return (
@@ -62,12 +65,12 @@ const HeaderComponent = () => {
         <Col span={6} style={{ display: "flex", gap: 10 }}>
           <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: 22, marginLeft: 10 }} />
-            {user?.name ? (
+            {user?.access_token ? (
               <>
                 <Popover placement="bottom" content={content}>
                   <div>
                     <div style={{ fontSize: 14, cursor: "pointer" }}>
-                      {user?.name}
+                      {user?.name || user?.email}
                     </div>
                   </div>
                 </Popover>
@@ -77,7 +80,7 @@ const HeaderComponent = () => {
                 <WrapperTextHeaderSmall onClick={() => navigate("/sign-in")}>
                   Đăng nhập/Đăng ký
                 </WrapperTextHeaderSmall>
-                <WrapperTextHeaderSmall>/</WrapperTextHeaderSmall>
+                <WrapperTextHeaderSmall></WrapperTextHeaderSmall>
 
                 <div>
                   <span style={{ fontSize: 14, cursor: "pointer" }}>

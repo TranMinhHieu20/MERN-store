@@ -81,13 +81,36 @@ export const refreshToken = async () => {
   }
 };
 
-//refresh_token
+//logOut
 export const logoutUser = async () => {
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL_BACKEND}/user/log-out`,
       {},
       { withCredentials: true } // tu dong lay cookie tu BE
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error(
+      "Lỗi khi refresh_token: ",
+      error.response ? error.response.data : error
+    );
+    return null;
+  }
+};
+
+//update user/:id
+export const updateUser = async (id, data, access_token) => {
+  try {
+    const res = await axios.put(
+      `${process.env.REACT_APP_API_URL_BACKEND}/user/update-user/${id}`,
+      data,
+      {
+        headers: {
+          token: `Bearer ${access_token}`,
+        },
+      }
     );
 
     return res.data;

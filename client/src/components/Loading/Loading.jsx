@@ -18,7 +18,7 @@ const Loading = () => {
         alignItems: "center",
       }}
     >
-      <Spin size="large" tip="Đang đăng xuất..." style={{ color: "#fff" }} />
+      <Spin size="large" style={{ color: "#fff" }} />
     </div>
   );
 };
