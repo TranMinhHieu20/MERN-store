@@ -1,10 +1,12 @@
-import React from "react";
-import { Col, Badge } from "antd";
+import React, { useState } from "react";
+import { Col, Badge, Popover } from "antd";
 import {
   WrapperHeader,
   WrapperTextHeader,
   WrapperHeaderAccount,
   WrapperTextHeaderSmall,
+  WrapperContextInfoUser,
+  WrapperLoading,
 } from "./style";
 import {
   UserOutlined,
@@ -13,18 +15,39 @@ import {
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as UserService from "../../Services/UseService";
+import { resetUser } from "../../redux/slices/userSlice";
+import Loading from "../../components/Loading/Loading";
 
 const HeaderComponent = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   console.log("user state: ", user);
   const handleNavigateLogin = () => {
     navigate("/sign-in");
   };
-  return (
+  const handleLogout = async () => {
+    setIsLoading(true);
+    await UserService.logoutUser();
+    localStorage.removeItem("access_token");
+    setTimeout(() => {
+      dispatch(resetUser());
+      setIsLoading(false);
+    }, 1500);
+  };
+  const content = (
     <div>
+      <WrapperContextInfoUser onClick={handleLogout}>
+        Đăng xuất
+      </WrapperContextInfoUser>
+      <WrapperContextInfoUser>Thông tin người dùng</WrapperContextInfoUser>
+    </div>
+  );
+  return (
+    <div style={{}}>
       <WrapperHeader gutter={0}>
         <Col span={6}>
           <WrapperTextHeader>LOGO</WrapperTextHeader>
@@ -40,9 +63,15 @@ const HeaderComponent = () => {
           <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: 22, marginLeft: 10 }} />
             {user?.name ? (
-              <div style={{ fontSize: 14, cursor: "pointer" }}>
-                {user?.name}
-              </div>
+              <>
+                <Popover placement="bottom" content={content}>
+                  <div>
+                    <div style={{ fontSize: 14, cursor: "pointer" }}>
+                      {user?.name}
+                    </div>
+                  </div>
+                </Popover>
+              </>
             ) : (
               <div onClick={handleNavigateLogin}>
                 <WrapperTextHeaderSmall onClick={() => navigate("/sign-in")}>
@@ -76,6 +105,7 @@ const HeaderComponent = () => {
           </div>
         </Col>
       </WrapperHeader>
+      <WrapperLoading>{isLoading && <Loading />}</WrapperLoading>
     </div>
   );
 };

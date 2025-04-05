@@ -7,19 +7,59 @@ import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
 import axios from "axios";
 // eslint-disable-next-line
 import { useQuery } from "@tanstack/react-query";
+import { isJsonString } from "./utils";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import * as UserService from "./Services/UseService";
+import { updateUser } from "./redux/slices/userSlice";
 
 function App() {
-  // useEffect(() => {
-  //   fetchApi();
-  // }, []);
-  // const fetchApi = async () => {
-  //   const res = await axios.get(
-  //     `${process.env.REACT_APP_API_URL_BACKEND}/product/get-all`
-  //   );
-  //   return res.data;
-  // };
-  // const query = useQuery({ queryKey: ["todos"], queryFn: fetchApi });
-  // console.log("query: ", query);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const { storageData, decoded } = handleDecoded();
+    if (decoded?.id) {
+      handleGetDetailsUser(decoded?.id, storageData);
+    }
+    console.log("storage: ", storageData);
+    // eslint-disable-next-line
+  }, []);
+  //
+  const handleDecoded = () => {
+    let storageData = localStorage.getItem("access_token");
+    let decoded = {};
+    if (storageData && isJsonString(storageData)) {
+      storageData = JSON.parse(storageData);
+      decoded = jwtDecode(storageData);
+      console.log("decodeAPP: ", decoded);
+    }
+    console.log("storage: ", storageData);
+    return { storageData, decoded };
+  };
+  //
+  const handleGetDetailsUser = async (id, token) => {
+    const res = await UserService.getDetailsUser(id, token);
+    dispatch(updateUser({ ...res?.data, access_token: token }));
+    console.log("res handle get details user: ", res);
+  };
+  // Add a request interceptor
+  UserService.axiosJWT.interceptors.request.use(
+    async (config) => {
+      console.log("HELLO");
+      const currentTime = new Date().getTime() / 1000;
+      const { decoded } = handleDecoded();
+      if (decoded?.exp < currentTime) {
+        console.log("Token da het han dang lam moi");
+        const data = await UserService.refreshToken();
+        console.log("config: ", data);
+        config.headers["token"] = `Bearer ${data?.access_token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
   return (
     <div>
       <Router>

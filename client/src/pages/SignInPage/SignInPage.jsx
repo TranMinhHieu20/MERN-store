@@ -19,6 +19,7 @@ import * as message from "../../components/Message/Message";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slices/userSlice";
+// import * as UserService from "./Services/UseService";
 
 const SignIpPage = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const SignIpPage = () => {
     if (data?.status === "Ok") {
       navigate("/");
       message.success(data?.message);
-      localStorage.setItem("access_token: ", data?.access_token);
+      localStorage.setItem("access_token", JSON.stringify(data?.access_token));
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);
         console.log("decode: ", decoded);

@@ -15,7 +15,7 @@ const authMiddleWare = (req, res, next) => {
       });
     }
     const { id, isAdmin } = user.payload;
-    console.log("USER: ", user.payload);
+    console.log("USERauthmiddleware: ", user.payload);
 
     if (user?.isAdmin) {
       console.log("next");
@@ -31,6 +31,7 @@ const authMiddleWare = (req, res, next) => {
 
 //allow get all info user if isAdmin or nguoi dung chi xem duoc thong tin rieng cua minh neu khong phai la isAdmin
 const authUserMiddleWare = (req, res, next) => {
+  console.log("req.headers.token", req.headers.token);
   const token = req.headers.token.split(" ")[1];
   const userId = req.params.id;
 
@@ -41,7 +42,7 @@ const authUserMiddleWare = (req, res, next) => {
         message: "Invalid or expired token!",
       });
     }
-    const { payload } = user;
+
     console.log("USER: ", user);
     if (user?.isAdmin || user?.id === userId) {
       next();

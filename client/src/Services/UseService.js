@@ -1,5 +1,7 @@
 import axios from "axios";
 
+export const axiosJWT = axios.create();
+
 //signUp
 export const signUpUser = async (data) => {
   try {
@@ -22,7 +24,10 @@ export const loginUser = async (data) => {
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL_BACKEND}/user/sign-in`,
-      data
+      data,
+      {
+        withCredentials: true, // de refresh_token luu lai o cookies
+      }
     );
     console.log("res.data-signIn: ", res.data);
     return res.data;
@@ -51,6 +56,44 @@ export const getDetailsUser = async (id, access_token) => {
   } catch (error) {
     console.error(
       "Lỗi khi Get details: ",
+      error.response ? error.response.data : error
+    );
+    return null;
+  }
+};
+
+//refresh_token
+export const refreshToken = async () => {
+  try {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL_BACKEND}/user/refresh_token`,
+      {},
+      { withCredentials: true } // tu dong lay cookie tu BE
+    );
+    console.log("refresh_token: ", res.data);
+    return res.data;
+  } catch (error) {
+    console.error(
+      "Lỗi khi refresh_token: ",
+      error.response ? error.response.data : error
+    );
+    return null;
+  }
+};
+
+//refresh_token
+export const logoutUser = async () => {
+  try {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL_BACKEND}/user/log-out`,
+      {},
+      { withCredentials: true } // tu dong lay cookie tu BE
+    );
+
+    return res.data;
+  } catch (error) {
+    console.error(
+      "Lỗi khi refresh_token: ",
       error.response ? error.response.data : error
     );
     return null;

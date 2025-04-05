@@ -32,3 +32,19 @@ export const WrapperTextHeaderSmall = styled.span`
   white-space: nowrap;
   cursor: pointer;
 `;
+export const WrapperContextInfoUser = styled.div`
+  cursor: pointer;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  &:hover {
+    background-color: #ccc;
+  }
+`;
+export const WrapperLoading = styled.div`
+  position: fixed;
+  right: 50%;
+  bottom: 50%;
+  z-index: 9999;
+`;

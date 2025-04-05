@@ -9,7 +9,7 @@ const generalAccessToken = (payload) => {
       ...payload,
     },
     process.env.ACCESS_TOKEN,
-    { expiresIn: "10m" }
+    { expiresIn: "30m" }
   );
   return access_token;
 };
@@ -37,10 +37,9 @@ const refreshTokenJwtService = (token) => {
             message: "Invalid or expired refresh token!",
           });
         }
-        const { payload } = user;
         const access_token = await generalAccessToken({
-          id: payload?.id,
-          isAdmin: payload?.isAdmin || false,
+          id: user?.id,
+          isAdmin: user?.isAdmin || false,
         });
         console.log("access_token: ", access_token);
         return resolve({

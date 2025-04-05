@@ -51,8 +51,10 @@ const loginUser = async (req, res) => {
     const response = await UserService.loginUser(req.body);
     const { refresh_token, ...newResponse } = response;
     res.cookie("refresh_token", refresh_token, {
-      httpOnly: true, // Đảm bảo cookie không thể truy cập từ JavaScript phía client
-      secure: process.env.NODE_ENV === "production", // Đảm bảo cookie chỉ được gửi qua HTTPS (chỉ sử dụng khi bạn triển khai trên môi trường bảo mật)
+      httpOnly: true, // Chỉ cho phép gửi cookie từ phía server, không thể truy cập bằng JS
+      secure: process.env.NODE_ENV === "production", // Đảm bảo cookie chỉ gửi qua HTTPS trong môi trường production
+      samesite: "strict", // Giới hạn cookie chỉ gửi trong cùng domain
+      maxAge: 30 * 24 * 60 * 60 * 1000, // Đặt thời gian hết hạn cho cookie (30 ngày)
     });
 
     return res.status(201).json(response);
@@ -136,8 +138,8 @@ const getDetailsUser = async (req, res) => {
 };
 
 //refreshToken
-
 const refreshToken = async (req, res) => {
+  console.log("refresh_token_new: ", req.cookies.refresh_token);
   try {
     const token = req.cookies.refresh_token;
     if (!token) {
@@ -155,6 +157,20 @@ const refreshToken = async (req, res) => {
   }
 };
 
+//logout
+const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("refresh_token");
+    return res.status(201).json({
+      status: "Ok",
+      message: "logout success",
+    });
+  } catch (error) {
+    console.log("Error dE user:", error);
+    return res.status(500).json({ message: error });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -163,4 +179,5 @@ module.exports = {
   getAllUser,
   getDetailsUser,
   refreshToken,
+  logoutUser,
 };
