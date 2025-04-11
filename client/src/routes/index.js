@@ -1,56 +1,64 @@
-import HomePage from "../pages/HomePage/HomePage";
-import OrderPage from "../pages/OrderPage/OrderPage";
-import ProductsPage from "../pages/ProductsPage/ProductsPage";
-import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
-import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
-import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
-import SignUpPage from "../pages/SignUpPage/SignUpPage";
-import SignInPage from "../pages/SignInPage/SignInPage";
-import ProfilePage from "../pages/Profile/ProfilePage";
+import HomePage from '../pages/HomePage/HomePage'
+import OrderPage from '../pages/OrderPage/OrderPage'
+import ProductsPage from '../pages/ProductsPage/ProductsPage'
+import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
+import TypeProductPage from '../pages/TypeProductPage/TypeProductPage'
+import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage'
+import SignUpPage from '../pages/SignUpPage/SignUpPage'
+import SignInPage from '../pages/SignInPage/SignInPage'
+import ProfilePage from '../pages/Profile/ProfilePage'
+import AdminPage from '../pages/AdminPage/AdminPage'
 
 export const routes = [
   {
-    path: "/",
+    path: '/',
     page: HomePage,
-    isShowHeader: true,
+    isShowHeader: true
   },
   {
-    path: "/order",
+    path: '/order',
     page: OrderPage,
-    isShowHeader: true,
+    isShowHeader: true
   },
   {
-    path: "/products",
+    path: '/products',
     page: ProductsPage,
-    isShowHeader: true,
+    isShowHeader: true
   },
   {
-    path: "/:type",
+    path: '/:type',
     page: TypeProductPage,
-    isShowHeader: true,
+    isShowHeader: true
   },
   {
-    path: "/sign-in",
+    path: '/sign-in',
     page: SignInPage,
-    isShowHeader: false,
+    isShowHeader: false
   },
   {
-    path: "/sign-up",
+    path: '/sign-up',
     page: SignUpPage,
-    isShowHeader: false,
+    isShowHeader: false
   },
   {
-    path: "/product-details",
+    path: '/product-details',
     page: ProductDetailsPage,
-    isShowHeader: true,
+    isShowHeader: true
   },
   {
-    path: "/profile-user",
+    path: '/profile-user',
     page: ProfilePage,
-    isShowHeader: true,
+    isShowHeader: true
   },
   {
-    path: "*",
-    page: NotFoundPage,
+    path: '/system/admin',
+    page: AdminPage,
+    isShowHeader: false,
+    isPrivate: true,
+    isAdminOnly: true
   },
-];
+  {
+    path: '*',
+    page: NotFoundPage
+  }
+]
