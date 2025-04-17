@@ -27,7 +27,7 @@ export const userSlice = createSlice({
         isAdmin
       } = action.payload
       console.log('action.payload: ', action)
-      state.name = name
+      state.name = name || email
       state.email = email
       state.phone = phone
       state.address = address
