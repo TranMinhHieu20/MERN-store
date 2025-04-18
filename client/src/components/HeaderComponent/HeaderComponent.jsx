@@ -41,9 +41,6 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   }
   const content = (
     <div>
-      <WrapperContextInfoUser onClick={handleLogout}>
-        Đăng xuất
-      </WrapperContextInfoUser>
       <WrapperContextInfoUser onClick={() => navigate('/profile-user')}>
         Thông tin người dùng
       </WrapperContextInfoUser>
@@ -52,6 +49,9 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           Quản lý hệ thống
         </WrapperContextInfoUser>
       )}
+      <WrapperContextInfoUser onClick={handleLogout}>
+        Đăng xuất
+      </WrapperContextInfoUser>
     </div>
   )
   return (
