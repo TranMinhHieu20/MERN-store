@@ -6,3 +6,17 @@ export const getAllProduct = async () => {
   )
   return res.data
 }
+
+export const createProduct = async (data) => {
+  console.log('data create product: ', data)
+  const res = await axios.post(
+    `${process.env.REACT_APP_API_URL_BACKEND}/product/create`,
+    data,
+    {
+      headers: {
+        'Content-Type': 'application/json' // Đảm bảo đây là json
+      }
+    }
+  )
+  return res.data
+}
