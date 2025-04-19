@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { WrapperHeader } from './styleAdminProduct'
 import { Button, Form, Modal } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import TableComponent from '../TableComponent/TableComponent'
 import InputComponent from '../InputComponent/InputComponent'
 import * as ProductService from '../../Services/ProductService'
 import { useMutationHook } from '../../hooks/useMutationHook'
 import Loading from '../../components/Loading/Loading'
 import * as message from '../../components/Message/Message'
+import { useQuery } from '@tanstack/react-query'
 
 function AdminProduct() {
   const [form] = Form.useForm()
@@ -37,15 +38,94 @@ function AdminProduct() {
     })
   })
 
+  const getAllProduct = async () => {
+    const res = await ProductService.getAllProduct()
+    return res
+  }
+  const { data } = mutation
+  const { isLoading: isLoadingProduct, data: products } = useQuery({
+    queryKey: ['products'],
+    queryFn: getAllProduct,
+    retry: 3,
+    retryDelay: 1000
+  })
+
+  const renderAction = () => {
+    return (
+      <div style={{ fontSize: '20px' }}>
+        <EditOutlined
+          title="edit"
+          style={{
+            color: 'rgb(26, 148, 255)',
+            cursor: 'pointer',
+            padding: '5px'
+          }}
+        />
+        <span></span>
+        <DeleteOutlined
+          title="Delete"
+          style={{
+            color: 'rgb(255, 53, 26)',
+            cursor: 'pointer',
+            padding: '5px',
+            marginLeft: '5px'
+          }}
+        />
+      </div>
+    )
+  }
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name'
+      // render: (text) => <a>{text}</a>
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price'
+    },
+    {
+      title: 'Rating',
+      dataIndex: 'rating'
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type'
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description'
+    },
+    {
+      title: 'Image',
+      dataIndex: 'image'
+    },
+    {
+      title: 'CountInStock',
+      dataIndex: 'countInStock'
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: renderAction
+    }
+  ]
+  const dataTable =
+    products?.data?.length &&
+    products?.data?.map((product) => {
+      return { ...product, key: product?._id }
+    })
+
   const showModal = () => {
     setIsModalOpen(true)
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    form.resetFields()
   }
 
-  const { data } = mutation
   console.log('Mutation.status: ', data?.status)
   console.log('Mutation.message: ', data?.message)
   useEffect(() => {
@@ -120,10 +200,18 @@ function AdminProduct() {
             borderStyle: 'dashed'
           }}
         >
-          <PlusOutlined style={{ fontSize: '50px' }} />
+          <PlusOutlined
+            title="Create products new"
+            style={{ fontSize: '50px' }}
+          />
         </Button>
         <div style={{ marginTop: '20px' }}>
-          <TableComponent />
+          <TableComponent
+            columns={columns}
+            data={dataTable}
+            products={products?.data}
+            isLoading={isLoadingProduct}
+          />
         </div>
       </div>
       <Modal
@@ -232,7 +320,11 @@ function AdminProduct() {
           )}
 
           <Form.Item label={null}>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ position: 'absolute', right: 0 }}
+            >
               {isSpinLoading ? 'Creating' : 'Create'}
             </Button>
           </Form.Item>
