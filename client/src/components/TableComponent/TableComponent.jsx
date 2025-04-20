@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Divider, Radio, Table } from 'antd'
+import React from 'react'
+import { Table } from 'antd'
 import Loading from '../Loading/Loading'
 
 const TableComponent = (props) => {
@@ -30,6 +30,7 @@ const TableComponent = (props) => {
         rowSelection={Object.assign({ type: selectionType }, rowSelection)}
         columns={columns}
         dataSource={data}
+        {...props}
       />
     </div>
   )

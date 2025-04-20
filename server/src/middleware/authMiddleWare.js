@@ -1,58 +1,57 @@
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-dotenv.config();
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+dotenv.config()
 
 // allow  user if isAdmin
 const authMiddleWare = (req, res, next) => {
-  console.log("checkToken: ", req.headers.token);
-  const token = req.headers.token.split(" ")[1];
+  console.log('checkToken: ', req.headers.token)
+  const token = req.headers.token.split(' ')[1]
 
   jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
     if (err) {
       return res.status(403).json({
-        status: "ERROR",
-        message: "Invalid or expired token!",
-      });
+        status: 'ERROR',
+        message: 'Invalid or expired token!'
+      })
     }
-    const { id, isAdmin } = user.payload;
-    console.log("USERauthmiddleware: ", user.payload);
+    const { id, isAdmin } = user
 
-    if (user?.isAdmin) {
-      console.log("next");
-      next(); // Cho phép tiếp tục nếu là admin
+    if (isAdmin) {
+      console.log('next')
+      next() // Cho phép tiếp tục nếu là admin
     } else {
       return res.status(403).json({
-        status: "ERROR",
-        message: "You are not authorized!",
-      });
+        status: 'ERROR',
+        message: 'You are not authorized!'
+      })
     }
-  });
-};
+  })
+}
 
 //allow get all info user if isAdmin or nguoi dung chi xem duoc thong tin rieng cua minh neu khong phai la isAdmin
 const authUserMiddleWare = (req, res, next) => {
-  console.log("req.headers.token", req.headers.token);
-  const token = req.headers.token.split(" ")[1];
-  const userId = req.params.id;
+  console.log('req.headers.token', req.headers.token)
+  const token = req.headers.token.split(' ')[1]
+  const userId = req.params.id
 
   jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
     if (err) {
       return res.status(403).json({
-        status: "ERROR",
-        message: "Invalid or expired token!",
-      });
+        status: 'ERROR',
+        message: 'Invalid or expired token!'
+      })
     }
 
-    console.log("USER: ", user);
+    console.log('USER: ', user)
     if (user?.isAdmin || user?.id === userId) {
-      next();
+      next()
     } else {
       return res.status(403).json({
-        status: "ERROR",
-        message: "You are not authorized!",
-      });
+        status: 'ERROR',
+        message: 'You are not authorized!'
+      })
     }
-  });
-};
+  })
+}
 
-module.exports = { authMiddleWare, authUserMiddleWare };
+module.exports = { authMiddleWare, authUserMiddleWare }

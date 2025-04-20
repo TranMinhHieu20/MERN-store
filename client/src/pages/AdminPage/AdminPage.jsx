@@ -43,7 +43,7 @@ function AdminPage() {
         <Menu
           mode="inline"
           selectedKeys={[keySelected]}
-          style={{ width: 256, height: '100vh', boxShadow: '1px 1px 2px #ccc' }}
+          style={{ width: 256, boxShadow: '1px 1px 2px #ccc' }}
           items={items}
           onClick={handleOnClick}
         />
