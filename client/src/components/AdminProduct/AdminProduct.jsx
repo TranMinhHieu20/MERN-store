@@ -11,12 +11,15 @@ import * as message from '../../components/Message/Message'
 import { useQuery } from '@tanstack/react-query'
 import DrawerComponent from '../DrawerComponent/DrawerComponent'
 import { useSelector } from 'react-redux'
+import ModalComponent from '../ModalComponent/ModalComponent'
 
 function AdminProduct() {
   const [rowSelected, setRowSelected] = useState('')
   const [form] = Form.useForm()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false)
   const [isOpenDrawer, setIsOpenDrawer] = useState(false)
+
   const [stateProduct, setStateProduct] = useState({
     name: '',
     type: '',
@@ -56,7 +59,13 @@ function AdminProduct() {
   const mutationUpdate = useMutationHook((data) => {
     console.log('data: ', data)
     const { id, token, ...rests } = data
-    const res = ProductService.updateProduct(id, token, rests)
+    const res = ProductService.updateProduct(id, token, { ...rests })
+    return res
+  })
+  const mutationDeleted = useMutationHook((data) => {
+    console.log('data: ', data)
+    const { id, token } = data
+    const res = ProductService.deleteProduct(id, token)
     return res
   })
 
@@ -66,13 +75,16 @@ function AdminProduct() {
   }
   const { data } = mutation
   const { data: dataUpdate } = mutationUpdate
+  const { data: dataDeleted } = mutationDeleted
+  console.log('dataDeleted: ', dataDeleted)
   console.log('mutation: Update', dataUpdate)
-  const { isLoading: isLoadingProduct, data: products } = useQuery({
+  const queryProduct = useQuery({
     queryKey: ['products'],
     queryFn: getAllProduct,
     retry: 3,
     retryDelay: 1000
   })
+  const { isLoading: isLoadingProduct, data: products } = queryProduct
   const fetchGetDetailsProduct = async (rowSelected) => {
     const res = await ProductService.getDetailsProduct(rowSelected)
     if (res?.data) {
@@ -129,6 +141,7 @@ function AdminProduct() {
             padding: '5px',
             marginLeft: '5px'
           }}
+          onClick={() => setIsModalOpenDelete(true)}
         />
       </div>
     )
@@ -156,9 +169,14 @@ function AdminProduct() {
       title: 'Description',
       dataIndex: 'description'
     },
+    // {
+    //   title: 'Image',
+    //   dataIndex: 'image'
+    // },
     {
       title: 'Image',
-      dataIndex: 'image'
+      dataIndex: 'image',
+      render: (image) => <img src={image} alt="product" style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
     },
     {
       title: 'CountInStock',
@@ -179,6 +197,25 @@ function AdminProduct() {
 
   const showModal = () => {
     setIsModalOpen(true)
+  }
+
+  const handleCancelDelete = () => {
+    setIsModalOpenDelete(false)
+  }
+
+  console.log('rowSelected', rowSelected)
+  console.log('user?.access_token', user?.access_token)
+  const handleDeleteProduct = () => {
+    mutationDeleted.mutate(
+      { id: rowSelected, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryProduct.refetch()
+        }
+      }
+    )
+    console.log('oke')
+    setIsModalOpenDelete(false)
   }
 
   const handleCancel = () => {
@@ -218,34 +255,44 @@ function AdminProduct() {
       setIsSpinLoadingUpdate(true)
       setTimeout(() => {
         setIsSpinLoadingUpdate(false)
-        // form.resetFields()
-        // setStateProductDetails({
-        //   name: '',
-        //   type: '',
-        //   countInStock: '',
-        //   price: '',
-        //   rating: '',
-        //   description: '',
-        //   image: null,
-        //   preViewImage: null
-        // })
         handleCancelUpdate()
         message.success(dataUpdate?.message)
       }, 2000)
     }
     // eslint-disable-next-line
   }, [dataUpdate?.status])
+  useEffect(() => {
+    if (dataDeleted?.status === 'Ok') {
+      // setIsSpinLoadingUpdate(true)
+      setTimeout(() => {
+        // setIsSpinLoadingUpdate(false)
+        handleCancelDelete()
+        message.success(dataDeleted?.message)
+      }, 2000)
+    }
+    // eslint-disable-next-line
+  }, [dataDeleted?.status])
 
   const onFinish = () => {
-    mutation.mutate(stateProduct)
+    mutation.mutate(stateProduct, {
+      onSettled: () => {
+        queryProduct.refetch()
+      }
+    })
   }
   const onUpdateProduct = () => {
-    mutationUpdate.mutate({
-      id: rowSelected,
-      token: user?.access_token,
-      stateProductDetails
-    })
-    console.log('Success')
+    mutationUpdate.mutate(
+      {
+        id: rowSelected,
+        token: user?.access_token,
+        ...stateProductDetails
+      },
+      {
+        onSettled: () => {
+          queryProduct.refetch()
+        }
+      }
+    )
   }
   console.log('token: ', user?.access_token, rowSelected, stateProductDetails)
   const handleOnChangeName = (e) => {
@@ -328,10 +375,7 @@ function AdminProduct() {
             borderStyle: 'dashed'
           }}
         >
-          <PlusOutlined
-            title="Create products new"
-            style={{ fontSize: '50px' }}
-          />
+          <PlusOutlined title="Create products new" style={{ fontSize: '50px' }} />
         </Button>
         <div style={{ marginTop: '20px' }}>
           <TableComponent
@@ -348,12 +392,7 @@ function AdminProduct() {
           />
         </div>
       </div>
-      <Modal
-        title="Tạo sản phẩm"
-        open={isModalOpen}
-        onCancel={handleCancel}
-        footer={null}
-      >
+      <ModalComponent title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form
           form={form}
           name="basic"
@@ -364,75 +403,33 @@ function AdminProduct() {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: 'Please input your name!' }]}
-          >
-            <InputComponent
-              value={stateProduct?.name}
-              onChange={handleOnChangeName}
-            />
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input your name!' }]}>
+            <InputComponent value={stateProduct?.name} onChange={handleOnChangeName} />
           </Form.Item>
-          <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: 'Please input your type!' }]}
-          >
-            <InputComponent
-              value={stateProduct?.type}
-              onChange={handleOnChangeType}
-            />
+          <Form.Item label="Type" name="type" rules={[{ required: true, message: 'Please input your type!' }]}>
+            <InputComponent value={stateProduct?.type} onChange={handleOnChangeType} />
           </Form.Item>
           <Form.Item
             label="CountInStock"
             name="countInStock"
-            rules={[
-              { required: true, message: 'Please input your countInStock!' }
-            ]}
+            rules={[{ required: true, message: 'Please input your countInStock!' }]}
           >
-            <InputComponent
-              value={stateProduct?.countInStock}
-              onChange={handleOnChangeCountInStock}
-            />
+            <InputComponent value={stateProduct?.countInStock} onChange={handleOnChangeCountInStock} />
           </Form.Item>
-          <Form.Item
-            label="Price"
-            name="price"
-            rules={[{ required: true, message: 'Please input your price!' }]}
-          >
-            <InputComponent
-              value={stateProduct?.price}
-              onChange={handleOnChangePrice}
-            />
+          <Form.Item label="Price" name="price" rules={[{ required: true, message: 'Please input your price!' }]}>
+            <InputComponent value={stateProduct?.price} onChange={handleOnChangePrice} />
           </Form.Item>
-          <Form.Item
-            label="Rating"
-            name="rating"
-            rules={[{ required: true, message: 'Please input your rating!' }]}
-          >
-            <InputComponent
-              value={stateProduct?.rating}
-              onChange={handleOnChangeRating}
-            />
+          <Form.Item label="Rating" name="rating" rules={[{ required: true, message: 'Please input your rating!' }]}>
+            <InputComponent value={stateProduct?.rating} onChange={handleOnChangeRating} />
           </Form.Item>
           <Form.Item
             label="Description"
             name="description"
-            rules={[
-              { required: true, message: 'Please input your description!' }
-            ]}
+            rules={[{ required: true, message: 'Please input your description!' }]}
           >
-            <InputComponent
-              value={stateProduct?.description}
-              onChange={handleOnChangeDescription}
-            />
+            <InputComponent value={stateProduct?.description} onChange={handleOnChangeDescription} />
           </Form.Item>
-          <Form.Item
-            label="Image"
-            name="image"
-            rules={[{ required: true, message: 'Please select an image!' }]}
-          >
+          <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please select an image!' }]}>
             <input type="file" onChange={handleChangeImage} />
             {stateProduct?.previewImage && (
               <img
@@ -447,18 +444,10 @@ function AdminProduct() {
               />
             )}
           </Form.Item>
-          {data?.status === 'Err' && (
-            <div style={{ color: 'red', margin: '10px 100px' }}>
-              {data?.message}
-            </div>
-          )}
+          {data?.status === 'Err' && <div style={{ color: 'red', margin: '10px 100px' }}>{data?.message}</div>}
 
           <Form.Item label={null}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ position: 'absolute', right: 0 }}
-            >
+            <Button type="primary" htmlType="submit" style={{ position: 'absolute', right: 0 }}>
               {isSpinLoading ? 'Creating' : 'Create'}
             </Button>
           </Form.Item>
@@ -478,7 +467,17 @@ function AdminProduct() {
             </span>
           )}
         </span>
-      </Modal>
+      </ModalComponent>
+      {/* xoa */}
+      <ModalComponent
+        title="Xóa sản phẩm"
+        open={isModalOpenDelete}
+        onCancel={handleCancelDelete}
+        onOk={handleDeleteProduct}
+      >
+        <div>Bạn có chắc xóa sản phẩm này không?</div>
+      </ModalComponent>
+      {/*  */}
       <DrawerComponent
         title="Chi tiết sản phẩm"
         isOpen={isOpenDrawer}
@@ -495,75 +494,33 @@ function AdminProduct() {
           onFinish={onUpdateProduct}
           autoComplete="off"
         >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: 'Please input your name!' }]}
-          >
-            <InputComponent
-              value={stateProductDetails?.name}
-              onChange={handleOnChangeNameDetails}
-            />
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input your name!' }]}>
+            <InputComponent value={stateProductDetails?.name} onChange={handleOnChangeNameDetails} />
           </Form.Item>
-          <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: 'Please input your type!' }]}
-          >
-            <InputComponent
-              value={stateProductDetails?.type}
-              onChange={handleOnChangeTypeDetails}
-            />
+          <Form.Item label="Type" name="type" rules={[{ required: true, message: 'Please input your type!' }]}>
+            <InputComponent value={stateProductDetails?.type} onChange={handleOnChangeTypeDetails} />
           </Form.Item>
           <Form.Item
             label="CountInStock"
             name="countInStock"
-            rules={[
-              { required: true, message: 'Please input your countInStock!' }
-            ]}
+            rules={[{ required: true, message: 'Please input your countInStock!' }]}
           >
-            <InputComponent
-              value={stateProductDetails?.countInStock}
-              onChange={handleOnChangeCountInStockDetails}
-            />
+            <InputComponent value={stateProductDetails?.countInStock} onChange={handleOnChangeCountInStockDetails} />
           </Form.Item>
-          <Form.Item
-            label="Price"
-            name="price"
-            rules={[{ required: true, message: 'Please input your price!' }]}
-          >
-            <InputComponent
-              value={stateProductDetails?.price}
-              onChange={handleOnChangePriceDetails}
-            />
+          <Form.Item label="Price" name="price" rules={[{ required: true, message: 'Please input your price!' }]}>
+            <InputComponent value={stateProductDetails?.price} onChange={handleOnChangePriceDetails} />
           </Form.Item>
-          <Form.Item
-            label="Rating"
-            name="rating"
-            rules={[{ required: true, message: 'Please input your rating!' }]}
-          >
-            <InputComponent
-              value={stateProductDetails?.rating}
-              onChange={handleOnChangeRatingDetails}
-            />
+          <Form.Item label="Rating" name="rating" rules={[{ required: true, message: 'Please input your rating!' }]}>
+            <InputComponent value={stateProductDetails?.rating} onChange={handleOnChangeRatingDetails} />
           </Form.Item>
           <Form.Item
             label="Description"
             name="description"
-            rules={[
-              { required: true, message: 'Please input your description!' }
-            ]}
+            rules={[{ required: true, message: 'Please input your description!' }]}
           >
-            <InputComponent
-              value={stateProductDetails?.description}
-              onChange={handleOnChangeDescriptionDetails}
-            />
+            <InputComponent value={stateProductDetails?.description} onChange={handleOnChangeDescriptionDetails} />
           </Form.Item>
-          <Form.Item
-            label="Image"
-            name="image"
-            rules={[{ required: false, message: 'Please select an image!' }]}
-          >
+          <Form.Item label="Image" name="image" rules={[{ required: false, message: 'Please select an image!' }]}>
             <input type="file" onChange={handleChangeImageDetails} />
             {stateProductDetails?.previewImage && (
               <img
@@ -579,17 +536,11 @@ function AdminProduct() {
             )}
           </Form.Item>
           {dataUpdate?.status === 'Err' && (
-            <div style={{ color: 'red', margin: '10px 100px' }}>
-              {dataUpdate?.message}
-            </div>
+            <div style={{ color: 'red', margin: '10px 100px' }}>{dataUpdate?.message}</div>
           )}
 
           <Form.Item label={null}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ position: 'absolute', right: 0 }}
-            >
+            <Button type="primary" htmlType="submit" style={{ position: 'absolute', right: 0 }}>
               {isSpinLoadingUpdate ? 'Updating' : 'Update'}
             </Button>
           </Form.Item>
